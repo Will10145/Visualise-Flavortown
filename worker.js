@@ -739,22 +739,22 @@ function getHTML() {
       let html = escapeHtml(markdown);
       
       // Bold **text** or __text__
-      html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      html = html.replace(/\\*\\*(.*?)\\*\\*/g, '<strong>$1</strong>');
       html = html.replace(/__(.+?)__/g, '<strong>$1</strong>');
       
       // Italic *text* or _text_
-      html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+      html = html.replace(/\\*([^*]+)\\*/g, '<em>$1</em>');
       html = html.replace(/_([^_]+)_/g, '<em>$1</em>');
       
       // Code - using RegExp constructor to avoid template literal issues
-      const codeRegex = new RegExp('\x60([^\x60]+)\x60', 'g');
+      const codeRegex = new RegExp('\\x60([^\\x60]+)\\x60', 'g');
       html = html.replace(codeRegex, '<code>$1</code>');
       
       // Line breaks
-      html = html.replace(/\n/g, '<br>');
+      html = html.replace(/\\n/g, '<br>');
       
       // Links [text](url)
-      html = html.replace(/\[(.*?)\]\((https?:\/\/[^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+      html = html.replace(/\\[(.*?)\\]\\((https?:\\/\\/[^)]+)\\)/g, '<a href="$2" target="_blank">$1</a>');
       
       return html;
     }
