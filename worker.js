@@ -32,7 +32,8 @@ export default {
       try {
           const apiUrl = `https://flavortown.hackclub.com/api/v1/projects/${projectId}/devlogs?page=${page}`;
         const headers = {
-          'Authorization': `Bearer ${apiKey}`
+          'Authorization': `Bearer ${apiKey}`,
+          'X-Flavortown-Ext-7075': 'true'
         };
         const response = await fetch(apiUrl, { headers });
         const data = await response.json();
