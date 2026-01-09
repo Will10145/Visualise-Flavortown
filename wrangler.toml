@@ -1,0 +1,12 @@
+name = "flavortown-devlog-timeline"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+# Account ID (you'll need to add your own)
+# account_id = "your_account_id_here"
+
+# Workers configuration
+workers_dev = true
+
+[env.production]
+name = "flavortown-devlog-timeline"
