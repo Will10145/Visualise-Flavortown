@@ -339,7 +339,35 @@ function getHTML() {
       line-height: 1.6;
       color: #444;
       margin-bottom: 1rem;
-      white-space: pre-wrap;
+    }
+    
+    .devlog-body strong {
+      font-weight: 700;
+      color: #222;
+    }
+    
+    .devlog-body em {
+      font-style: italic;
+    }
+    
+    .devlog-body code {
+      background: #f4f4f4;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 0.9em;
+      color: #d63384;
+    }
+    
+    .devlog-body a {
+      color: #ec3750;
+      text-decoration: none;
+      font-weight: 600;
+      border-bottom: 1px solid #ec3750;
+    }
+    
+    .devlog-body a:hover {
+      color: #d62d47;
     }
     
     .devlog-media {
@@ -613,15 +641,16 @@ function getHTML() {
             \${devlog.duration_seconds ? \`<div class="devlog-duration">\${formatDuration(devlog.duration_seconds)}</div>\` : ''}
           </div>
           
-          <div class="devlog-body">\${escapeHtml(devlog.body)}</div>
+          <div class="devlog-body">\${markdownToHtml(devlog.body)}</div>
           
           \${devlog.media && devlog.media.length > 0 ? \`
             <div class="devlog-media">
               \${devlog.media.map(media => {
+                const url = normalizeImageUrl(media.url);
                 if (media.content_type.startsWith('image/')) {
-                  return \`<img src="\${media.url}" alt="Devlog media" onclick="window.open('\${media.url}', '_blank')">\`;
+                  return \`<img src="\${url}" alt="Devlog media" onclick="window.open('\${url}', '_blank')">\`;
                 } else if (media.content_type.startsWith('video/')) {
-                  return \`<video src="\${media.url}" controls></video>\`;
+                  return \`<video src="\${url}" controls></video>\`;
                 }
                 return '';
               }).join('')}
@@ -704,6 +733,43 @@ function getHTML() {
       const div = document.createElement('div');
       div.textContent = text;
       return div.innerHTML;
+    }
+    
+    function markdownToHtml(markdown) {
+      let html = escapeHtml(markdown);
+      
+      // Bold **text** or __text__
+      html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      html = html.replace(/__(.+?)__/g, '<strong>$1</strong>');
+      
+      // Italic *text* or _text_
+      html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+      html = html.replace(/_([^_]+)_/g, '<em>$1</em>');
+      
+      // Code `text`
+      html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+      
+      // Line breaks
+      html = html.replace(/\n/g, '<br>');
+      
+      // Links [text](url)
+      html = html.replace(/\[(.*?)\]\((https?:\/\/[^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+      
+      return html;
+    }
+    
+    function normalizeImageUrl(url) {
+      // If URL contains the old Rails endpoint, convert to Flavortown representation endpoint
+      if (url.includes('/rails/active_storage/blobs/proxy/')) {
+        // Extract the blob ID and filename from the URL
+        const match = url.match(/\/blobs\/proxy\/([^/]+)\/(.+)$/);
+        if (match) {
+          const blobId = match[1];
+          const filename = match[2];
+          return `https://flavortown.hackclub.com/rails/active_storage/representations/proxy/${blobId}/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJ3ZWJwIiwicmVzaXplX3RvX2xpbWl0Ijo6WzgwMCw4MDBdLCJzYXZlciI6eyJzdHJpcCI6dHJ1ZSwicXVhbGl0eSI6NzV9fSwicHVyIjoidmFyaWF0aW9uIn19--b31f00576a4e60a9662bd00307d0a77b5bfc6d7e/${filename}`;
+        }
+      }
+      return url;
     }
     
     // Check for project ID in URL parameters
