@@ -709,7 +709,7 @@ function getHTML() {
       } else if (diffDays === 1) {
         return 'Yesterday';
       } else if (diffDays < 7) {
-        return \`\${diffDays} days ago\`;
+        return diffDays + ' days ago';
       } else {
         return date.toLocaleDateString('en-US', { 
           year: 'numeric', 
@@ -724,9 +724,9 @@ function getHTML() {
       const minutes = Math.floor((seconds % 3600) / 60);
       
       if (hours > 0) {
-        return \`\${hours}h \${minutes}m\`;
+        return hours + 'h ' + minutes + 'm';
       }
-      return \`\${minutes}m\`;
+      return minutes + 'm';
     }
     
     function escapeHtml(text) {
@@ -763,7 +763,7 @@ function getHTML() {
       // If URL contains the old Rails endpoint, convert to Flavortown representation endpoint
       if (url.includes('/rails/active_storage/blobs/proxy/')) {
         // Extract the blob ID and filename from the URL
-        const match = url.match(/\/blobs\/proxy\/([^/]+)\/(.+)$/);
+        const match = url.match(/\\/blobs\\/proxy\\/([^/]+)\\/(.+)$/);
         if (match) {
           const blobId = match[1];
           const filename = match[2];
