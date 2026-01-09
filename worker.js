@@ -746,8 +746,9 @@ function getHTML() {
       html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
       html = html.replace(/_([^_]+)_/g, '<em>$1</em>');
       
-      // Code `text`
-      html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+      // Code - using RegExp constructor to avoid template literal issues
+      const codeRegex = new RegExp('\x60([^\x60]+)\x60', 'g');
+      html = html.replace(codeRegex, '<code>$1</code>');
       
       // Line breaks
       html = html.replace(/\n/g, '<br>');
@@ -766,7 +767,7 @@ function getHTML() {
         if (match) {
           const blobId = match[1];
           const filename = match[2];
-          return `https://flavortown.hackclub.com/rails/active_storage/representations/proxy/${blobId}/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJ3ZWJwIiwicmVzaXplX3RvX2xpbWl0Ijo6WzgwMCw4MDBdLCJzYXZlciI6eyJzdHJpcCI6dHJ1ZSwicXVhbGl0eSI6NzV9fSwicHVyIjoidmFyaWF0aW9uIn19--b31f00576a4e60a9662bd00307d0a77b5bfc6d7e/${filename}`;
+          return 'https://flavortown.hackclub.com/rails/active_storage/representations/proxy/' + blobId + '/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJ3ZWJwIiwicmVzaXplX3RvX2xpbWl0IjpbODAwLDgwMF0sInNhdmVyIjp7InN0cmlwIjp0cnVlLCJxdWFsaXR5Ijo3NX19LCJwdXIiOiJ2YXJpYXRpb24ifX0=--b31f00576a4e60a9662bd00307d0a77b5bfc6d7e/' + filename;
         }
       }
       return url;
