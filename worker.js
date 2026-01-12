@@ -32,7 +32,7 @@ export default {
         const response = await fetch(apiUrl, {
           headers: {
             'Authorization': `Bearer ${apiKey}`,
-            'X-Flavortown-Ext': projectId
+            'X-Flavortown-Ext-7075': true
           }
         });
         const data = await response.json();
@@ -74,7 +74,7 @@ export default {
         const response = await fetch(apiUrl, {
           headers: {
             'Authorization': `Bearer ${apiKey}`,
-            'X-Flavortown-Ext-7075': true
+            'x-flavortown-ext-7075': true
           }
         });
         const data = await response.json();
